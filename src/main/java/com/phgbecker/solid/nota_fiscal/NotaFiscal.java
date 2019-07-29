@@ -39,4 +39,34 @@ public class NotaFiscal {
     public List<Imposto> getImpostos() {
         return Collections.unmodifiableList(impostos);
     }
+
+    public static class Builder {
+        private Detalhe detalhe;
+        private Emitente emitente;
+        private Destinatario destinatario;
+        private List<Produto> produtos;
+        private List<Imposto> impostos;
+
+        public Builder(Detalhe detalhe, Emitente emitente, Destinatario destinatario) {
+            this.detalhe = detalhe;
+            this.emitente = emitente;
+            this.destinatario = destinatario;
+            this.produtos = Collections.emptyList();
+            this.impostos = Collections.emptyList();
+        }
+
+        public Builder withProdutos(List<Produto> produtos) {
+            this.produtos = produtos;
+            return this;
+        }
+
+        public Builder withImpostos(List<Imposto> impostos) {
+            this.impostos = impostos;
+            return this;
+        }
+
+        public NotaFiscal build() {
+            return new NotaFiscal(detalhe, emitente, destinatario, produtos, impostos);
+        }
+    }
 }

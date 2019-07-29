@@ -38,14 +38,12 @@ public class Gerador {
         );
 
 
-        GeradorNotaFiscal geradorNotaFiscal = new GeradorNotaFiscal(
-                detalhe,
-                emitente,
-                destinatario,
-                produtos,
-                impostos,
-                acoes
-        );
+        GeradorNotaFiscal geradorNotaFiscal = new GeradorNotaFiscal.Builder(detalhe, emitente, destinatario)
+                .withProdutos(produtos)
+                .withImpostos(impostos)
+                .withAcoesAposEmissao(acoes)
+                .build();
+
         geradorNotaFiscal.gerar();
     }
 }

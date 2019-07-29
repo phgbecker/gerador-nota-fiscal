@@ -6,5 +6,4 @@ public class Emitente {
     public Emitente(String nome) {
         this.nome = nome;
     }
-
 }

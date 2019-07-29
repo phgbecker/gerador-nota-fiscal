@@ -13,5 +13,4 @@ public class AcaoEnviarEmail implements AcaoNotaFiscal {
         if (email.isPresent())
             System.out.println("Enviando NF-e para o email do destinatário (" + email.get() + ")...");
     }
-
 }
