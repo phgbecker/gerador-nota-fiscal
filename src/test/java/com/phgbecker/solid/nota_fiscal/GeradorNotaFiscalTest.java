@@ -10,6 +10,8 @@ import com.phgbecker.solid.imposto.ImpostoMercadoriaEstrangeira;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -40,16 +42,9 @@ public class GeradorNotaFiscalTest {
                 new ImpostoFundoCombatePobreza()
         );
 
-        List<AcaoNotaFiscal> acoes = Arrays.asList(
-                new AcaoSalvarNotaFiscal(),
-                new AcaoImprimirCupomFiscal(),
-                new AcaoEnviarEmail()
-        );
-
         GeradorNotaFiscal gerador = new GeradorNotaFiscal.Builder(detalhe, emitente, destinatario)
                 .withProdutos(produtos)
                 .withImpostos(impostos)
-                .withAcoesAposEmissao(acoes)
                 .build();
 
         NotaFiscal notaFiscal = new NotaFiscal(
@@ -61,5 +56,30 @@ public class GeradorNotaFiscalTest {
         );
 
         assertThat(gerador.gerar()).isEqualTo(notaFiscal);
+    }
+
+    @Test
+    public void givenAcoes_whenGerar_thenOutputStreamContains() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
+
+        System.setOut(new PrintStream(outputStream));
+        System.setErr(new PrintStream(errorOutputStream));
+
+        List<AcaoNotaFiscal> acoes = Arrays.asList(
+                new AcaoSalvarNotaFiscal(),
+                new AcaoImprimirCupomFiscal(),
+                new AcaoEnviarEmail()
+        );
+
+        new GeradorNotaFiscal.Builder(detalhe, emitente, destinatario)
+                .withAcoesAposEmissao(acoes)
+                .build()
+                .gerar();
+
+        assertThat(outputStream.toString())
+                .contains("Salvando")
+                .contains("Imprimindo")
+                .contains("Enviando");
     }
 }
