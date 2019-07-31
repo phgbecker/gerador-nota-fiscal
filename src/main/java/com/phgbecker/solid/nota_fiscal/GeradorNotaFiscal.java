@@ -16,7 +16,7 @@ public class GeradorNotaFiscal {
     private final List<Imposto> impostos;
     private final List<AcaoNotaFiscal> acoesAposEmissao;
 
-    public GeradorNotaFiscal(Detalhe detalhe, Emitente emitente, Destinatario destinatario, List<Produto> produtos, List<Imposto> impostos, List<AcaoNotaFiscal> acoesAposEmissao) {
+    private GeradorNotaFiscal(Detalhe detalhe, Emitente emitente, Destinatario destinatario, List<Produto> produtos, List<Imposto> impostos, List<AcaoNotaFiscal> acoesAposEmissao) {
         this.detalhe = requireNonNull(detalhe, "Objeto Detalhe inválido");
         this.emitente = requireNonNull(emitente, "Objeto Emitente inválido");
         this.destinatario = requireNonNull(destinatario, "Objeto Destinatário inválido");
@@ -26,10 +26,13 @@ public class GeradorNotaFiscal {
     }
 
     public NotaFiscal gerar() {
-        NotaFiscal notaFiscal = new NotaFiscal.Builder(detalhe, emitente, destinatario)
-                .withProdutos(produtos)
-                .withImpostos(impostos)
-                .build();
+        NotaFiscal notaFiscal = new NotaFiscal(
+                detalhe,
+                emitente,
+                destinatario,
+                produtos,
+                impostos
+        );
 
         if (!acoesAposEmissao.isEmpty())
             acoesAposEmissao.forEach(acao -> acao.executar(notaFiscal));
@@ -49,6 +52,8 @@ public class GeradorNotaFiscal {
             this.detalhe = detalhe;
             this.emitente = emitente;
             this.destinatario = destinatario;
+            this.produtos = Collections.emptyList();
+            this.impostos = Collections.emptyList();
             this.acoesAposEmissao = Collections.emptyList();
         }
 

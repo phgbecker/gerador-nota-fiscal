@@ -4,6 +4,7 @@ import com.phgbecker.solid.imposto.Imposto;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class NotaFiscal {
     private final Detalhe detalhe;
@@ -40,33 +41,20 @@ public class NotaFiscal {
         return Collections.unmodifiableList(impostos);
     }
 
-    public static class Builder {
-        private Detalhe detalhe;
-        private Emitente emitente;
-        private Destinatario destinatario;
-        private List<Produto> produtos;
-        private List<Imposto> impostos;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NotaFiscal that = (NotaFiscal) o;
+        return Objects.equals(detalhe, that.detalhe) &&
+                Objects.equals(emitente, that.emitente) &&
+                Objects.equals(destinatario, that.destinatario) &&
+                Objects.equals(produtos, that.produtos) &&
+                Objects.equals(impostos, that.impostos);
+    }
 
-        public Builder(Detalhe detalhe, Emitente emitente, Destinatario destinatario) {
-            this.detalhe = detalhe;
-            this.emitente = emitente;
-            this.destinatario = destinatario;
-            this.produtos = Collections.emptyList();
-            this.impostos = Collections.emptyList();
-        }
-
-        public Builder withProdutos(List<Produto> produtos) {
-            this.produtos = produtos;
-            return this;
-        }
-
-        public Builder withImpostos(List<Imposto> impostos) {
-            this.impostos = impostos;
-            return this;
-        }
-
-        public NotaFiscal build() {
-            return new NotaFiscal(detalhe, emitente, destinatario, produtos, impostos);
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(detalhe, emitente, destinatario, produtos, impostos);
     }
 }
